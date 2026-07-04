@@ -44,7 +44,7 @@
 > \[!NOTE]
 > This platform runs \*\*entirely offline\*\* on a local Windows/Linux/macOS machine: local Oracle XE, local FastAPI backend, a local Node.js QR microservice, a mock bank webhook, and a single-file HTML frontend. No real payment gateway, no real money, no outbound network calls once dependencies are installed.
 
-\---
+
 
 ## 📚 Table of Contents
 
@@ -88,7 +88,7 @@
 
 </details>
 
-\---
+
 
 ## 🧭 Executive Summary
 
@@ -221,7 +221,6 @@ This platform addresses the above by providing:
 > \[!TIP]
 > Every dependency above is pinned in \[`requirements.txt`](./requirements.txt) and \[`package.json`](./package.json) for reproducible installs. See \[`pyproject.toml`](./pyproject.toml) for tooling configuration (Black, Flake8, pytest).
 
-\---
 
 ## 🏗️ Architecture
 
@@ -580,7 +579,7 @@ flowchart TD
     NodeService\["Node QR Microservice"] --> Express
 ```
 
-\---
+
 
 ## 📁 Project Structure
 
@@ -662,7 +661,6 @@ student\_payment\_aggregator/
 └── README.md                         # You are here
 ```
 
-\---
 
 ## 🚀 Quick Start
 
@@ -717,7 +715,6 @@ npm install
 
 `oracledb` runs in **thin mode by default** - no separate Oracle Instant Client install is required.
 
-\---
 
 ## ⚙️ Configuration
 
@@ -756,7 +753,7 @@ cp env.template .env          # Node.js QR microservice (optional - sane default
 
 </details>
 
-\---
+
 
 ## 🗄️ Database Setup (Oracle XE)
 
@@ -801,7 +798,6 @@ curl http://127.0.0.1:4000/health
 
 If this service is temporarily unreachable, `PaymentService.initiate\_payment` degrades gracefully - the transaction is still created with a raw `upi://pay` string, just without a rendered QR image. **A down QR service never blocks fee collection.**
 
-\---
 
 ## ▶️ Running the Backend
 
@@ -817,7 +813,6 @@ curl http://127.0.0.1:8000/api/health
 
 Interactive API docs: **http://127.0.0.1:8000/docs**
 
-\---
 
 ## 🖥️ Running the Frontend
 
@@ -832,7 +827,7 @@ python3 -m http.server 5500
 
 Then visit `http://127.0.0.1:5500` and confirm the "Backend base URL" field matches your Uvicorn address.
 
-\---
+
 
 ## 🧪 Offline Testing Walkthrough
 
@@ -843,7 +838,7 @@ Then visit `http://127.0.0.1:5500` and confirm the "Backend base URL" field matc
 5. Click **🏦 Simulate Payment Success (Mock Bank)** → the backend signs and posts a mock webhook, verifies the signature, and atomically commits the transaction + invoice update.
 6. UI refreshes: transaction badge turns green, invoice drops off the pending list.
 
-\---
+
 
 ## 📖 API Documentation
 
@@ -890,7 +885,6 @@ Full reference with request/response schemas: [`API\_REFERENCE.md`](./API_REFERE
 
 </details>
 
-\---
 
 ## 🖼️ Screenshots
 
@@ -913,7 +907,6 @@ Full reference with request/response schemas: [`API\_REFERENCE.md`](./API_REFERE
 |:-:|:-:|:-:|
 |!\[Reports](docs/screenshots/reports.png)|!\[Dark Theme](docs/screenshots/dark-theme.png)|!\[Mobile View](docs/screenshots/mobile-view.png)|
 
-\---
 
 ## 💳 Payment Flow
 
@@ -937,13 +930,11 @@ flowchart TD
     F --> G\["200 - reconciliation complete"]
 ```
 
-\---
 
 ## 🗃️ Database Design
 
 Full schema, indexes, triggers, and sample data documented in [`DATABASE.md`](./DATABASE.md). See the [ER Diagram](#database-er-diagram) above for entity relationships.
 
-\---
 
 ## 🔐 Security
 
@@ -956,7 +947,6 @@ Full schema, indexes, triggers, and sample data documented in [`DATABASE.md`](./
 
 Full policy, responsible disclosure process, and OWASP checklist: [`SECURITY.md`](./SECURITY.md).
 
-\---
 
 ## 📝 Logging \& Observability
 
@@ -964,7 +954,6 @@ Full policy, responsible disclosure process, and OWASP checklist: [`SECURITY.md`
 * **Correlation IDs**: an `X-Correlation-Id` header is minted or propagated across the Python ↔ Node boundary, so a single request's log lines can be traced end-to-end.
 * **Health checks**: `GET /api/health` merges framework-level checks (DB connectivity, required tables, disk, config) with business-level checks (mock bank reachability).
 
-\---
 
 ## ⚡ Performance Notes
 
@@ -972,7 +961,6 @@ Full policy, responsible disclosure process, and OWASP checklist: [`SECURITY.md`
 * `oracledb` thin mode avoids the overhead and installation burden of the Oracle Instant Client.
 * Webhook reconciliation is a **single database session/COMMIT** - no multi-round-trip update sequence that could leave a partially-applied state on failure.
 
-\---
 
 ## ✅ Testing
 
@@ -984,7 +972,6 @@ These are **integration tests** against a real local Oracle XE instance (no DB m
 
 Full testing strategy, fixtures, and how to add new tests: [`TESTING.md`](./TESTING.md).
 
-\---
 
 ## 🚢 Deployment
 
@@ -995,13 +982,11 @@ This project is designed for **local, offline evaluation** first. For containeri
 * Environment variable injection strategy
 * Reverse-proxy and CORS hardening for non-local use
 
-\---
 
 ## 🩺 Troubleshooting
 
 Common issues and fixes are documented in [`TROUBLESHOOTING.md`](./TROUBLESHOOTING.md), including Oracle XE connection errors, `oracledb` thin-mode gotchas, Node.js port conflicts, and CORS issues when opening the frontend via `file://`.
 
-\---
 
 ## ⚠️ Known Limitations
 
@@ -1014,7 +999,6 @@ Common issues and fixes are documented in [`TROUBLESHOOTING.md`](./TROUBLESHOOTI
 >
 > None of this blocks the core offline payment flow - see \[`ROADMAP.md`](./ROADMAP.md) for the planned wiring milestone.
 
-\---
 
 ## 🛣️ Roadmap
 
@@ -1026,13 +1010,11 @@ Highlights (full detail through **Version 5.0** in [`ROADMAP.md`](./ROADMAP.md))
 * **v4.0** - Microservices split, Docker Compose production profile, Kubernetes manifests
 * **v5.0** - ERP connector adapters (Oracle Fusion, PeopleSoft, SAP, Workday), AI-assisted reconciliation and predictive fee-collection analytics (RAG over payment history)
 
-\---
 
 ## 🤝 Contributing
 
 Contributions are welcome! Please read [`CONTRIBUTING.md`](./CONTRIBUTING.md) for our branch strategy, commit conventions, coding standards, and pull request process, and [`CODE\_OF\_CONDUCT.md`](./CODE_OF_CONDUCT.md) before participating.
 
-\---
 
 ## 📚 Documentation Index
 
@@ -1056,13 +1038,11 @@ Contributions are welcome! Please read [`CONTRIBUTING.md`](./CONTRIBUTING.md) fo
 |[`DISCLAIMER.md`](./DISCLAIMER.md)|Legal/offline-simulation disclaimer|
 |[`ACKNOWLEDGEMENTS.md`](./ACKNOWLEDGEMENTS.md)|Credits and third-party acknowledgements|
 
-\---
 
 ## 📄 License
 
 Proprietary: © Harish Mahanta. All rights reserved.
 
-\---
 
 ## 💬 Support
 
@@ -1070,7 +1050,6 @@ Proprietary: © Harish Mahanta. All rights reserved.
 * 💡 **Questions / ideas:** start a [GitHub Discussion](../../discussions)
 * 🔒 **Security issues:** see [`SECURITY.md`](./SECURITY.md) for responsible disclosure - do **not** open a public issue for vulnerabilities
 
-\---
 
 ## 🙏 Acknowledgements
 
@@ -1078,7 +1057,6 @@ See [`ACKNOWLEDGEMENTS.md`](./ACKNOWLEDGEMENTS.md) for the full list of open-sou
 
 <div align="center">
 
-\---
 
 **Built for institutions that need enterprise-grade fee collection without enterprise-grade cost.**
 
