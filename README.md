@@ -1060,7 +1060,7 @@ Contributions are welcome! Please read [`CONTRIBUTING.md`](./CONTRIBUTING.md) fo
 
 ## 📄 License
 
-Licensed under the **MIT License** - see [`LICENSE`](./LICENSE) for the full text.
+Proprietary: © Harish Mahanta. All rights reserved.
 
 \---
 
