@@ -1,0 +1,31 @@
+# Student Smart Payment Aggregator — Python dependencies
+#
+# Install with:
+#   pip install -r requirements.txt
+#
+# Tested on Python 3.11.9 (Windows 11 + VS Code), fully offline after
+# this one-time install. No package here makes outbound network calls
+# at runtime.
+
+# --- Web framework / ASGI server ------------------------------------------
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+
+# --- Database (core.database_manager, app.repositories.*) -----------------
+sqlalchemy==2.0.35
+oracledb==2.4.1          # thin mode by default -- no Oracle Instant Client needed
+
+# --- Configuration / environment (core.environment_manager) ---------------
+python-dotenv==1.0.1
+
+# --- Request/response validation (app.api.schemas) -------------------------
+pydantic==2.9.2
+
+# --- HTTP client (app.services.qr_service_client -> Node.js QR service) ---
+httpx==0.27.2
+
+# --- PDF receipt generation (app.services.receipt_service) -----------------
+reportlab==4.2.5
+
+# --- Testing ----------------------------------------------------------------
+pytest==8.3.3

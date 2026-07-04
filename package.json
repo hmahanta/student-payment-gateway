@@ -1,0 +1,20 @@
+{
+  "name": "student-payment-qr-service",
+  "version": "1.0.0",
+  "description": "Offline Node.js microservice that generates NPCI-style UPI QR codes (PNG/SVG/Base64) for the Student Smart Payment Aggregator. Consumed by the FastAPI backend over HTTP so the QR-rendering technology can be swapped without touching business code.",
+  "main": "server.js",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "qrcode": "^1.5.4",
+    "dotenv": "^16.4.5",
+    "helmet": "^7.1.0"
+  }
+}

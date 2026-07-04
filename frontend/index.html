@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Student Smart Payment Aggregator — Offline Test Console</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root {
+    --bg: #0f172a;
+    --panel: #1e293b;
+    --panel-2: #273449;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --accent: #38bdf8;
+    --success: #34d399;
+    --danger: #f87171;
+    --border: #334155;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, Segoe UI, Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  h1 { font-size: 22px; margin-bottom: 4px; }
+  .sub { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+  select, button {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--panel-2);
+    color: var(--text);
+    font-size: 14px;
+  }
+  select { margin-bottom: 4px; }
+  button {
+    cursor: pointer;
+    font-weight: 600;
+    border: none;
+    margin-top: 8px;
+    transition: opacity 0.15s;
+  }
+  button:hover { opacity: 0.85; }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-primary { background: var(--accent); color: #0f172a; }
+  .btn-success { background: var(--success); color: #052e21; }
+  .row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; }
+  .row .k { color: var(--muted); }
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .badge.pending { background: #78350f; color: #fde68a; }
+  .badge.success { background: #064e3b; color: #6ee7b7; }
+  .badge.failed { background: #7f1d1d; color: #fecaca; }
+  #qrBox {
+    display: flex;
+    justify-content: center;
+    padding: 16px;
+    background: #fff;
+    border-radius: 12px;
+    margin: 12px 0;
+  }
+  .uri-box {
+    font-family: monospace;
+    font-size: 11px;
+    color: var(--muted);
+    word-break: break-all;
+    background: var(--panel-2);
+    padding: 8px;
+    border-radius: 8px;
+    margin-top: 8px;
+  }
+  #log {
+    font-family: monospace;
+    font-size: 12px;
+    color: var(--muted);
+    max-height: 160px;
+    overflow-y: auto;
+    background: #0b1220;
+    padding: 10px;
+    border-radius: 8px;
+    white-space: pre-wrap;
+  }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>💳 Student Smart Payment Aggregator</h1>
+  <div class="sub">Offline test console — Oracle XE + FastAPI backend running locally</div>
+
+  <div class="card">
+    <label for="apiBase">Backend base URL</label>
+    <select id="apiBase">
+      <option value="http://127.0.0.1:8000">http://127.0.0.1:8000</option>
+    </select>
+
+    <label for="studentSelect" style="margin-top:14px;">Select Student</label>
+    <select id="studentSelect"><option value="">Loading students…</option></select>
+  </div>
+
+  <div class="card hidden" id="invoiceCard">
+    <div class="row"><span class="k">Student</span><span id="studentName">—</span></div>
+    <div class="row"><span class="k">Virtual Account</span><span id="vacc">—</span></div>
+    <div class="row"><span class="k">UPI ID</span><span id="upiId">—</span></div>
+    <hr style="border-color: var(--border); margin: 12px 0;">
+    <label for="invoiceSelect">Pending Invoice</label>
+    <select id="invoiceSelect"><option value="">No pending invoices</option></select>
+    <div class="row" style="margin-top:8px;">
+      <span class="k">Outstanding</span><span id="outstandingAmt">—</span>
+    </div>
+
+    <label for="modeSelect" style="margin-top:14px;">Payment Mode</label>
+    <select id="modeSelect">
+      <option value="UPI_QR">UPI_QR</option>
+      <option value="UPI_ID">UPI_ID</option>
+      <option value="NET_BANKING">NET_BANKING</option>
+    </select>
+
+    <button class="btn-primary" id="payBtn">Pay via UPI QR</button>
+  </div>
+
+  <div class="card hidden" id="paymentCard">
+    <div class="row"><span class="k">Transaction ID</span><span id="txnId">—</span></div>
+    <div class="row"><span class="k">Status</span><span id="txnStatus" class="badge pending">PENDING</span></div>
+    <div class="row"><span class="k">Amount</span><span id="txnAmount">—</span></div>
+
+    <div id="qrBox" class="hidden"><div id="qrcode"></div></div>
+    <div class="uri-box hidden" id="uriBox"></div>
+
+    <button class="btn-success" id="simulateBtn">🏦 Simulate Payment Success (Mock Bank)</button>
+    <button id="refreshBtn" style="margin-top:6px;">Refresh Status</button>
+  </div>
+
+  <div class="card">
+    <label>Activity Log</label>
+    <div id="log"></div>
+  </div>
+</div>
+
+<script>
+const logEl = document.getElementById('log');
+function log(msg) {
+  const t = new Date().toLocaleTimeString();
+  logEl.textContent += `[${t}] ${msg}\n`;
+  logEl.scrollTop = logEl.scrollHeight;
+}
+
+function apiBase() { return document.getElementById('apiBase').value; }
+
+let currentStudent = null;
+let pendingInvoices = [];
+let currentTxn = null;
+
+async function api(path, opts = {}) {
+  const res = await fetch(apiBase() + path, {
+    headers: { 'Content-Type': 'application/json' },
+    ...opts,
+  });
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const msg = body.message || body.detail || res.statusText;
+    throw new Error(`${res.status}: ${msg}`);
+  }
+  return body;
+}
+
+async function loadStudents() {
+  try {
+    const students = await api('/api/students');
+    const sel = document.getElementById('studentSelect');
+    sel.innerHTML = '<option value="">-- Select a student --</option>' +
+      students.map(s => `<option value="${s.student_id}">${s.student_name} (${s.student_id})</option>`).join('');
+    log(`Loaded ${students.length} students.`);
+  } catch (e) {
+    log('ERROR loading students: ' + e.message);
+  }
+}
+
+async function loadProfile(studentId) {
+  const profile = await api(`/api/students/${studentId}/profile`);
+  currentStudent = profile.student;
+  pendingInvoices = profile.pending_invoices;
+
+  document.getElementById('invoiceCard').classList.remove('hidden');
+  document.getElementById('studentName').textContent = currentStudent.student_name;
+  document.getElementById('vacc').textContent = currentStudent.assigned_virtual_account;
+  document.getElementById('upiId').textContent = currentStudent.assigned_upi_id;
+
+  const invSel = document.getElementById('invoiceSelect');
+  if (pendingInvoices.length === 0) {
+    invSel.innerHTML = '<option value="">No pending invoices 🎉</option>';
+    document.getElementById('outstandingAmt').textContent = '—';
+  } else {
+    invSel.innerHTML = pendingInvoices.map(i =>
+      `<option value="${i.invoice_id}">${i.fee_description} — ₹${(i.amount_due - i.amount_paid).toFixed(2)}</option>`
+    ).join('');
+    updateOutstanding();
+  }
+  log(`Loaded profile for ${currentStudent.student_name}: ${pendingInvoices.length} pending invoice(s).`);
+}
+
+function updateOutstanding() {
+  const invId = document.getElementById('invoiceSelect').value;
+  const inv = pendingInvoices.find(i => i.invoice_id === invId);
+  document.getElementById('outstandingAmt').textContent = inv
+    ? `₹${(inv.amount_due - inv.amount_paid).toFixed(2)}`
+    : '—';
+}
+
+async function initiatePayment() {
+  const invoiceId = document.getElementById('invoiceSelect').value;
+  const mode = document.getElementById('modeSelect').value;
+  if (!currentStudent || !invoiceId) { log('Select a student and invoice first.'); return; }
+
+  try {
+    const result = await api('/api/payments/initiate', {
+      method: 'POST',
+      body: JSON.stringify({
+        student_id: currentStudent.student_id,
+        invoice_id: invoiceId,
+        payment_mode: mode,
+      }),
+    });
+    currentTxn = result;
+    renderPayment(result);
+    log(`Payment initiated: ${result.transaction_id} (${result.payment_mode}, ₹${result.amount})`);
+  } catch (e) {
+    log('ERROR initiating payment: ' + e.message);
+  }
+}
+
+function renderPayment(result) {
+  document.getElementById('paymentCard').classList.remove('hidden');
+  document.getElementById('txnId').textContent = result.transaction_id;
+  setStatusBadge(result.payment_status);
+  document.getElementById('txnAmount').textContent = `₹${result.amount}`;
+
+  const qrBox = document.getElementById('qrBox');
+  const uriBox = document.getElementById('uriBox');
+  document.getElementById('qrcode').innerHTML = '';
+
+  if (result.upi_uri) {
+    qrBox.classList.remove('hidden');
+    uriBox.classList.remove('hidden');
+    uriBox.textContent = result.upi_uri;
+    new QRCode(document.getElementById('qrcode'), {
+      text: result.upi_uri,
+      width: 200,
+      height: 200,
+    });
+  } else {
+    qrBox.classList.add('hidden');
+    uriBox.classList.add('hidden');
+  }
+}
+
+function setStatusBadge(status) {
+  const el = document.getElementById('txnStatus');
+  el.textContent = status;
+  el.className = 'badge ' + (status === 'SUCCESS' ? 'success' : status === 'FAILED' ? 'failed' : 'pending');
+}
+
+async function simulatePaymentSuccess() {
+  if (!currentTxn) { log('No active transaction.'); return; }
+  try {
+    const utrRes = await api('/api/mock-bank/generate-utr');
+    const utr = utrRes.utr;
+
+    const signRes = await api('/api/mock-bank/sign', {
+      method: 'POST',
+      body: JSON.stringify({
+        transaction_id: currentTxn.transaction_id,
+        bank_reference_no: utr,
+        status: 'SUCCESS',
+      }),
+    });
+
+    const webhookRes = await api('/api/mock-bank/webhook', {
+      method: 'POST',
+      body: JSON.stringify({
+        transaction_id: currentTxn.transaction_id,
+        bank_reference_no: utr,
+        status: 'SUCCESS',
+        signature: signRes.signature,
+      }),
+    });
+
+    setStatusBadge(webhookRes.payment_status);
+    log(`Mock webhook processed: ${webhookRes.transaction_id} -> ${webhookRes.payment_status} (UTR ${utr})`);
+    if (webhookRes.invoice) {
+      log(`Invoice ${webhookRes.invoice.invoice_id} now ${webhookRes.invoice.invoice_status} ` +
+          `(paid ₹${webhookRes.invoice.amount_paid} / due ₹${webhookRes.invoice.amount_due})`);
+    }
+    // Refresh the invoice list so the dropdown reflects the new balance.
+    if (currentStudent) await loadProfile(currentStudent.student_id);
+  } catch (e) {
+    log('ERROR simulating payment: ' + e.message);
+  }
+}
+
+async function refreshStatus() {
+  if (!currentTxn) return;
+  try {
+    const status = await api(`/api/payments/${currentTxn.transaction_id}`);
+    setStatusBadge(status.payment_status);
+    log(`Refreshed: ${status.transaction_id} -> ${status.payment_status}`);
+  } catch (e) {
+    log('ERROR refreshing status: ' + e.message);
+  }
+}
+
+document.getElementById('studentSelect').addEventListener('change', (e) => {
+  document.getElementById('paymentCard').classList.add('hidden');
+  currentTxn = null;
+  if (e.target.value) loadProfile(e.target.value);
+  else document.getElementById('invoiceCard').classList.add('hidden');
+});
+document.getElementById('invoiceSelect').addEventListener('change', updateOutstanding);
+document.getElementById('payBtn').addEventListener('click', initiatePayment);
+document.getElementById('simulateBtn').addEventListener('click', simulatePaymentSuccess);
+document.getElementById('refreshBtn').addEventListener('click', refreshStatus);
+
+loadStudents();
+</script>
+</body>
+</html>
