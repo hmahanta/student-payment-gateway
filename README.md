@@ -10,22 +10,17 @@
 
 <br/>
 
-[!\[Version](https://img.shields.io/badge/version-1.0.0-blue?style=for-the-badge)](./CHANGELOG.md)
-[!\[Python](https://img.shields.io/badge/python-3.11.9-3776AB?style=for-the-badge\&logo=python\&logoColor=white)](https://www.python.org/)
-[!\[FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=for-the-badge\&logo=fastapi\&logoColor=white)](https://fastapi.tiangolo.com/)
-[!\[Node.js](https://img.shields.io/badge/node.js-LTS-339933?style=for-the-badge\&logo=node.js\&logoColor=white)](https://nodejs.org/)
-[!\[Oracle](https://img.shields.io/badge/Oracle-XE-F80000?style=for-the-badge\&logo=oracle\&logoColor=white)](https://www.oracle.com/database/technologies/appdev/xe.html)
-[!\[SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.x-D71F00?style=for-the-badge)](https://www.sqlalchemy.org/)
-[!\[License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)](./LICENSE)
+[![PyPI version](https://img.shields.io/badge/pypi-v0.1.0-blue)](#)
+[![Python Version](https://img.shields.io/badge/python-3.11%2B-blue)](#)
+[![License](https://img.shields.io/badge/license-Apache%202.0-green)](#)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](#)
+[![Code Style](https://img.shields.io/badge/code%20style-black-000000)](#)
+[![Type Checked](https://img.shields.io/badge/mypy-checked-blue)](#)
 
-[!\[Build](https://img.shields.io/badge/build-passing-brightgreen?style=flat-square)](./.github/workflows/ci.yml)
-[!\[Tests](https://img.shields.io/badge/tests-pytest-0A9EDC?style=flat-square\&logo=pytest\&logoColor=white)](./tests)
-[!\[Code Style](https://img.shields.io/badge/code%20style-black-000000?style=flat-square)](https://github.com/psf/black)
-[!\[Lint](https://img.shields.io/badge/lint-flake8-4B8BBE?style=flat-square)](https://flake8.pycqa.org/)
-[!\[Docker](https://img.shields.io/badge/docker-ready-2496ED?style=flat-square\&logo=docker\&logoColor=white)](./Dockerfile)
-[!\[Offline Ready](https://img.shields.io/badge/offline-ready-success?style=flat-square)](#-offline-first-design)
-[!\[Enterprise Ready](https://img.shields.io/badge/enterprise-ready-informational?style=flat-square)](#-architecture)
-[!\[PRs Welcome](https://img.shields.io/badge/PRs-welcome-orange?style=flat-square)](./CONTRIBUTING.md)
+[![GitHub Stars](https://img.shields.io/github/stars/hmahanta/student-payment-gateway?style=for-the-badge)](https://github.com/hmahanta/student-payment-gateway/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/hmahanta/student-payment-gateway?style=for-the-badge)](https://github.com/hmahanta/student-payment-gateway/network/members)
+[![GitHub Issues](https://img.shields.io/github/issues/hmahanta/student-payment-gateway?style=for-the-badge)](https://github.com/hmahanta/student-payment-gateway/issues)
+[![GitHub Last Commit](https://img.shields.io/github/last-commit/hmahanta/student-payment-gateway?style=for-the-badge)](https://github.com/hmahanta/student-payment-gateway)
 
 <br/>
 
