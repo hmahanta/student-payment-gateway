@@ -1,6 +1,10 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/github/explore/main/topics/fintech/fintech.png" alt="Student Smart Payment Aggregator" width="120" />
+<p align="center">
+  <img src="assets/student_payment.png"
+       alt="Student Payment Gateway"
+       width="100%">
+</p>
 
 # 🎓💳 Student Smart Payment \& Fee Management Platform
 
